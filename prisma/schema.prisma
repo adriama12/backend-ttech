@@ -1,0 +1,59 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://dbuser:p3TB719lKwjjBtn74dibAc47TOYyi1F2@dpg-d1qpf33uibrs73eog1lg-a.oregon-postgres.render.com/intermedio_xdeq"
+}
+
+model Concepto {
+  id   Int           @id @default(autoincrement())
+  Name String
+  Move Movimientos[]
+}
+
+model Metodo_Pago {
+  id     Int           @id @default(autoincrement())
+  Metodo String
+  Move   Movimientos[]
+}
+
+model Tipo_Movimiento {
+  id   Int           @id @default(autoincrement())
+  Name String
+  Move Movimientos[]
+}
+
+model Usuarios {
+  id             Int           @id @default(autoincrement())
+  Name           String
+  Email          String        @unique
+  Cntrasena      String        @unique
+  Fecha_Creacion DateTime
+  Move           Movimientos[]
+}
+
+model Movimientos {
+  id          Int      @id @default(autoincrement())
+  Nombre      String
+  Fecha       DateTime
+  Descripcion String
+  Valor       Int
+
+  Concepto          Concepto?        @relation(fields: [conceptoId], references: [id])
+  conceptoId        Int?
+  Metodo_Pago       Metodo_Pago?     @relation(fields: [metodo_PagoId], references: [id])
+  metodo_PagoId     Int?
+  Tipo_Movimiento   Tipo_Movimiento? @relation(fields: [tipo_MovimientoId], references: [id])
+  tipo_MovimientoId Int?
+  Usuarios          Usuarios?        @relation(fields: [usuariosId], references: [id])
+  usuariosId        Int?
+}
